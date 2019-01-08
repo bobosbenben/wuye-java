@@ -1,0 +1,9 @@
+/target
+*.log*
+*mvnw*
+mwnw.cmd
+wuye.iml
+.idea
+/build
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/*
