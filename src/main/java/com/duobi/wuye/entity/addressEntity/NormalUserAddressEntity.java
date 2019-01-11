@@ -2,7 +2,7 @@ package com.duobi.wuye.entity.addressEntity;
 
 import com.duobi.wuye.entity.BaseEntity;
 
-public class NormalUserCommunityEntity extends BaseEntity {
+public class NormalUserAddressEntity extends BaseEntity {
 
     private ProvinceEntity provinceEntity;                      //省
     private CityEntity cityEntity;                              //市
@@ -13,7 +13,7 @@ public class NormalUserCommunityEntity extends BaseEntity {
     private UnitEntity unitEntity;                              //单元
     private RoomEntity roomEntity;                              //房间号
     private Long normalUserId;                                  //所属用户的id
-    private Boolean normalUsersDefaultCommunity;                //是否是所属用户的默认小区
+    private Boolean normalUsersDefaultAddress;                  //是否是所属用户的默认小区
 
     public ProvinceEntity getProvinceEntity() {
         return provinceEntity;
@@ -87,11 +87,11 @@ public class NormalUserCommunityEntity extends BaseEntity {
         this.normalUserId = normalUserId;
     }
 
-    public Boolean getNormalUsersDefaultCommunity() {
-        return normalUsersDefaultCommunity;
+    public Boolean getNormalUsersDefaultAddress() {
+        return normalUsersDefaultAddress;
     }
 
-    public void setNormalUsersDefaultCommunity(Boolean normalUsersDefaultCommunity) {
-        this.normalUsersDefaultCommunity = normalUsersDefaultCommunity;
+    public void setNormalUsersDefaultAddress(Boolean normalUsersDefaultAddress) {
+        this.normalUsersDefaultAddress = normalUsersDefaultAddress;
     }
 }

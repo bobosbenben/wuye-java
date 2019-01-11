@@ -6,7 +6,7 @@ public class BaseAddressEntity extends BaseEntity {
 
     private String name;
     private String code;
-    private String shorName;
+    private String shortName;
 
     public String getName() {
         return name;
@@ -24,11 +24,11 @@ public class BaseAddressEntity extends BaseEntity {
         this.code = code;
     }
 
-    public String getShorName() {
-        return shorName;
+    public String getShortName() {
+        return shortName;
     }
 
     public void setShorName(String shorName) {
-        this.shorName = shorName;
+        this.shortName = shorName;
     }
 }

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.duobi.wuye.dao.NormalUserDao">
+
+    <sql id="normalUserAddressColumn">
+        a.id AS id,
+        a.province_id as "province_entity.id",
+        p.name as "province_entity.name",
+        p.code as "province_entity.code",
+        p.short_name as "province_entity.short_name",
+        a.city_id as "city_entity.id",
+        c.name as "city_entity.name",
+        c.code as "city_entity.code",
+        c.short_name as "city_entity.short_name",
+        a.country_or_district_id as "country_or_district_entity.id",
+        cu.name as "country_or_district_entity.name",
+        cu.code as "country_or_district_entity.code",
+        cu.short_name as "country_or_district_entity.short_name",
+        a.town_id as "town_entity.id",
+        t.name as "town_entity.name",
+        t.code as "town_entity.code",
+        t.short_name as "town_entity.short_name",
+        a.community_id as "community_entity.id",
+        cm.name as "community_entity.name",
+        cm.code as "community_entity.code",
+        cm.short_name as "community_entity.short_name",
+        a.building_id as "building_entity.id",
+        b.name as "building_entity.name",
+        b.code as "building_entity.code",
+        b.short_name as "building_entity.short_name",
+        a.unit_id as "unit_entity.id",
+        u.name as "unit_entity.name",
+        u.code as "unit_entity.code",
+        u.short_name as "unit_entity.short_name",
+        a.room_id as "room_entity.id",
+        r.name as "room_entity.name",
+        r.code as "room_entity.code",
+        r.short_name as "room_entity.short_name",
+        a.normal_user_id,
+        a.normal_users_default_address,
+        a.create_time,
+        a.create_by,
+        a.del_flag
+    </sql>
+
+    <sql id="joins">
+      left join t_normal_user_address_province p on a.province_id = p.id
+      left join t_normal_user_address_city c on a.city_id = c.id
+      left join t_normal_user_address_country cu on a.country_or_district_id = cu.id
+      left join t_normal_user_address_town t on a.town_id = t.id
+      left join t_normal_user_address_community cm on a.community_id = cm.id
+      left join t_normal_user_address_building b on a.building_id = b.id
+      left join t_normal_user_address_unit u on a.unit_id = u.id
+      left join t_normal_user_address_room r on a.room_id = r.id
+    </sql>
+
+    <!-- 根据普通用户的Id获取用户的默认地址 -->
+    <select id="getUsersDefaultAddressByNormalUserId" resultType="com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity">
+        SELECT
+        <include refid="normalUserAddressColumn" />
+        FROM t_normal_user_address a
+        <include refid="joins" />
+        WHERE a.normal_user_id = #{id} and a.normal_users_default_address = true and a.del_flag = false
+    </select>
+
+</mapper>

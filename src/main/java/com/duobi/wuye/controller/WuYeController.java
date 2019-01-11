@@ -1,19 +1,32 @@
 package com.duobi.wuye.controller;
 
+import com.duobi.wuye.dto.NormalUserAddressDTO;
+import com.duobi.wuye.entity.NormalUser;
+import com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity;
+import com.duobi.wuye.service.NormalUserService;
 import com.duobi.wuye.utils.CosClientUtil;
 import com.duobi.wuye.utils.ResponseJson;
+import com.duobi.wuye.utils.weixinutils.DataExchangeUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 
-@RestController
+@Controller
+@RequestMapping("/wuye")
 public class WuYeController {
+
+    @Autowired
+    private NormalUserService normalUserService;
 
     @CrossOrigin( maxAge = 3600)
     @RequestMapping("/upload")
-    public Object upload(HttpServletRequest request, @RequestParam(value="file") MultipartFile file) {
+    public @ResponseBody
+    Object upload(HttpServletRequest request, @RequestParam(value="file") MultipartFile file) {
         ResponseJson responseJson = new ResponseJson();
 
         if (!file.isEmpty()) {
@@ -59,5 +72,37 @@ public class WuYeController {
         return responseJson;
     }
 
+    @CrossOrigin( maxAge = 3600)
+    @RequestMapping("/getdefaultaddress")
+    public @ResponseBody
+    Object getNormalUsersDefaultAddress(){
+        ResponseJson responseJson = new ResponseJson();
+        NormalUserAddressDTO n = normalUserService.getUsersDefaultAddressByNormalUserId(new NormalUser(1L));
+
+        responseJson.setSuccess(true);
+        if (n != null) responseJson.setTotal(1);
+        else responseJson.setTotal(0);
+        responseJson.setData(n);
+
+        return responseJson;
+    }
+
+//    @CrossOrigin( maxAge = 3600)
+    @RequestMapping(value = "/code")
+    public @ResponseBody
+    ModelAndView code(HttpServletRequest request){
+        String code = request.getParameter("code");
+        String openid = null;
+
+        try {
+            openid = DataExchangeUtil.getOpenIdByCode(code);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        request.getSession().setAttribute("openid",openid);
+
+        ModelAndView modelAndView = new ModelAndView("/index.html");
+        return modelAndView;
+    }
 
 }
