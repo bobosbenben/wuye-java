@@ -6,14 +6,16 @@ import com.duobi.wuye.utils.ResponseJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Random;
 
-@RestController
+@Controller
 @CrossOrigin
 public class HelloWorldController {
 
@@ -22,7 +24,7 @@ public class HelloWorldController {
     private TestService testService;
 
     @RequestMapping("/hello")
-    public Object index() {
+    public @ResponseBody Object index() {
         User user = new User();
         user.setId(1L);
 
@@ -42,5 +44,13 @@ public class HelloWorldController {
         modelAndView.setViewName("/index.html");
 
         return modelAndView;
+    }
+
+    @RequestMapping("/redirect")
+    public String redirect() {
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("/index.html");
+
+        return "redirect:https://www.duobifuwu.com/#/detail/1";
     }
 }
