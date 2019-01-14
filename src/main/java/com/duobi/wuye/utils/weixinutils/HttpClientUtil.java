@@ -42,7 +42,7 @@ public class HttpClientUtil {
                 // 获取服务端返回的数据
                 content = EntityUtils.toString(response.getEntity(),"UTF-8");
                 // 服务端返回数据的长度
-                System.out.println("内容长度：" + content.length());
+//                System.out.println("内容长度：" + content.length());
             }
         }catch (Exception e){
             e.printStackTrace();

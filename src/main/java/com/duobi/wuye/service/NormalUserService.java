@@ -18,6 +18,19 @@ public class NormalUserService {
         NormalUserAddressEntity n =  normalUserDao.getUsersDefaultAddressByNormalUserId(normalUser.getId());
         if (n == null) return null;
 
+        return copyNormalUserAddressEntityToDTO(n);
+    }
+
+    public NormalUserAddressDTO getUserDefaultAddressByOpenid(NormalUser normalUser){
+        if (normalUser == null) return null;
+        NormalUserAddressEntity n =  normalUserDao.getUsersDefaultAddressByOpenid(normalUser.getOpenid());
+        if (n == null) return null;
+
+        return copyNormalUserAddressEntityToDTO(n);
+
+    }
+
+    private NormalUserAddressDTO copyNormalUserAddressEntityToDTO(NormalUserAddressEntity n){
         NormalUserAddressDTO normalUserAddressDTO = new NormalUserAddressDTO();
         normalUserAddressDTO.setProvince(n.getProvinceEntity().getShortName());
         normalUserAddressDTO.setCity(n.getCityEntity().getShortName());

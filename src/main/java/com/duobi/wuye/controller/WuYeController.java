@@ -1,5 +1,6 @@
 package com.duobi.wuye.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.duobi.wuye.dto.NormalUserAddressDTO;
 import com.duobi.wuye.entity.NormalUser;
 import com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity;
@@ -7,6 +8,8 @@ import com.duobi.wuye.service.NormalUserService;
 import com.duobi.wuye.utils.CosClientUtil;
 import com.duobi.wuye.utils.ResponseJson;
 import com.duobi.wuye.utils.weixinutils.DataExchangeUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,8 @@ import java.io.*;
 @Controller
 @RequestMapping("/wuye")
 public class WuYeController {
+
+    private static Logger logger = LoggerFactory.getLogger(WuYeController.class);
 
     @Autowired
     private NormalUserService normalUserService;
@@ -75,9 +80,14 @@ public class WuYeController {
     @CrossOrigin( maxAge = 3600)
     @RequestMapping("/getdefaultaddress")
     public @ResponseBody
-    Object getNormalUsersDefaultAddress(){
+    Object getNormalUsersDefaultAddress(@RequestBody JSONObject jsonObject){
         ResponseJson responseJson = new ResponseJson();
-        NormalUserAddressDTO n = normalUserService.getUsersDefaultAddressByNormalUserId(new NormalUser(1L));
+
+        String openid = jsonObject.getString("openid");
+
+        NormalUser normalUser = new NormalUser();
+        normalUser.setOpenid(openid);
+        NormalUserAddressDTO n = normalUserService.getUserDefaultAddressByOpenid(normalUser);
 
         responseJson.setSuccess(true);
         if (n != null) responseJson.setTotal(1);
@@ -87,22 +97,22 @@ public class WuYeController {
         return responseJson;
     }
 
-//    @CrossOrigin( maxAge = 3600)
-    @RequestMapping(value = "/code")
-    public @ResponseBody
-    ModelAndView code(HttpServletRequest request){
+    @CrossOrigin( maxAge = 3600)
+    @RequestMapping(value = "/faultreport")
+    public String faultReport(HttpServletRequest request){
         String code = request.getParameter("code");
         String openid = null;
+        NormalUser userInfo = new NormalUser();
 
         try {
-            openid = DataExchangeUtil.getOpenIdByCode(code);
+//            openid = DataExchangeUtil.getOpenIdByCode(code);
+            userInfo = DataExchangeUtil.getUserInfoByCode(code);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        request.getSession().setAttribute("openid",openid);
 
-        ModelAndView modelAndView = new ModelAndView("/index.html");
-        return modelAndView;
+        String url = "redirect:https://www.duobifuwu.com/#/baoxiu/"+userInfo.getOpenid();
+        return url;
     }
 
 }

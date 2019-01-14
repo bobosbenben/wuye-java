@@ -6,4 +6,7 @@ public interface NormalUserDao {
 
     public NormalUserAddressEntity getUsersDefaultAddressByNormalUserId(Long id);
 
+    public NormalUserAddressEntity getUsersDefaultAddressByOpenid(String openid);
+
+
 }

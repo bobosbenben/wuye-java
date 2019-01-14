@@ -43,7 +43,7 @@
         a.del_flag
     </sql>
 
-    <sql id="joins">
+    <sql id="addressJoins">
       left join t_normal_user_address_province p on a.province_id = p.id
       left join t_normal_user_address_city c on a.city_id = c.id
       left join t_normal_user_address_country cu on a.country_or_district_id = cu.id
@@ -54,13 +54,27 @@
       left join t_normal_user_address_room r on a.room_id = r.id
     </sql>
 
+    <sql id="userJoins">
+        left join t_normal_user nu on a.normal_user_id = nu.id
+    </sql>
+
     <!-- 根据普通用户的Id获取用户的默认地址 -->
     <select id="getUsersDefaultAddressByNormalUserId" resultType="com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity">
         SELECT
         <include refid="normalUserAddressColumn" />
         FROM t_normal_user_address a
-        <include refid="joins" />
+        <include refid="addressJoins" />
         WHERE a.normal_user_id = #{id} and a.normal_users_default_address = true and a.del_flag = false
+    </select>
+
+    <!-- 根据普通用户的openid获取用户的默认地址 -->
+    <select id="getUsersDefaultAddressByOpenid" resultType="com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity">
+        SELECT
+        <include refid="normalUserAddressColumn" />
+        FROM t_normal_user_address a
+        <include refid="addressJoins" />
+        <include refid="userJoins" />
+        WHERE nu.openid = #{openid} and a.normal_users_default_address = true and a.del_flag = false and nu.del_flag = false
     </select>
 
 </mapper>

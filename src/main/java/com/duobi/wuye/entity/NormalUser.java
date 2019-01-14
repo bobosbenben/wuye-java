@@ -6,7 +6,7 @@ import java.util.List;
 
 public class NormalUser extends BaseEntity {
 
-    private String openId;
+    private String openid;
     private String nickName;
     private String sex;     //1-男  2-女
     private String province;
@@ -14,19 +14,21 @@ public class NormalUser extends BaseEntity {
     private String country;
     private String headImgUrl;
     private String[] privilege;
-    private String unionId;
+    private String unionid;
     private List<NormalUserAddressEntity> normalUserAddressEntityList;
+
+    public NormalUser(){}
 
     public NormalUser(Long id){
         this.setId(id);
     }
 
-    public String getOpenId() {
-        return openId;
+    public String getOpenid() {
+        return openid;
     }
 
-    public void setOpenId(String openId) {
-        this.openId = openId;
+    public void setOpenid(String openid) {
+        this.openid = openid;
     }
 
     public String getNickName() {
@@ -85,12 +87,12 @@ public class NormalUser extends BaseEntity {
         this.privilege = privilege;
     }
 
-    public String getUnionId() {
-        return unionId;
+    public String getUnionid() {
+        return unionid;
     }
 
-    public void setUnionId(String unionId) {
-        this.unionId = unionId;
+    public void setUnionid(String unionid) {
+        this.unionid = unionid;
     }
 
     public List<NormalUserAddressEntity> getNormalUserAddressEntityList() {

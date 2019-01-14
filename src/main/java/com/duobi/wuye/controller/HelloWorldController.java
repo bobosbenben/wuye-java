@@ -51,6 +51,7 @@ public class HelloWorldController {
 //        ModelAndView modelAndView = new ModelAndView();
 //        modelAndView.setViewName("/index.html");
 
-        return "redirect:https://www.duobifuwu.com/#/detail/1";
+        String url = "redirect:https://www.duobifuwu.com/#/baoxiu/oLb0h1kMIeuxBV8DnVPUM8XVPNck";
+        return url;
     }
 }

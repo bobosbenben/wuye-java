@@ -113,3 +113,21 @@ create table t_normal_user_address_room
   del_flag boolean default false
 );
 
+#普通用户表
+drop table if exists t_normal_user;
+create table t_normal_user
+(
+  id bigint auto_increment primary key,
+  openid varchar(64) comment 'openid',
+  nick_name varchar(128) comment '昵称',
+  sex varchar(1) comment '性别：1-男，2-女',
+  nation varchar(64) comment '国家',
+  province varchar(128) comment '省',
+  city varchar(128) comment '城市',
+  country varchar(128) comment '区或者县',
+  head_img_url varchar(256) comment '头像地址',
+  unionid varchar(64) comment '统一id',
+  create_time timestamp default now() comment '创建时间',
+  create_by bigint not null ,
+  del_flag boolean default false
+);
