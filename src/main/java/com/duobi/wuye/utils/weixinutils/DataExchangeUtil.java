@@ -1,7 +1,7 @@
 package com.duobi.wuye.utils.weixinutils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.duobi.wuye.entity.NormalUser;
+import com.duobi.wuye.entity.NormalUserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,11 +28,11 @@ public class DataExchangeUtil {
         return openid;
     }
 
-    public static NormalUser getUserInfoByCode(String code) throws Exception{
+    public static NormalUserEntity getUserInfoByCode(String code) throws Exception{
         String openid = null;
         String access_token = null;
         String refresh_token = null;
-        NormalUser userInfo = new NormalUser();
+        NormalUserEntity userInfo = new NormalUserEntity();
 
 
         if (code == null || code.equals("")) throw new Exception("从前台获取的code为空");
@@ -63,8 +63,8 @@ public class DataExchangeUtil {
      * @param openid openid
      * @return 用户信息
      */
-    private static NormalUser getUserInfoByCorrectAccessToken(String access_token,String openid){
-        NormalUser userInfo = new NormalUser();
+    private static NormalUserEntity getUserInfoByCorrectAccessToken(String access_token, String openid){
+        NormalUserEntity userInfo = new NormalUserEntity();
         String url = AppConifg.get_unionid_by_code_url;
         url = url.replace("ACCESS_TOKEN",access_token);
         url = url.replace("OPENID",openid);
@@ -87,7 +87,7 @@ public class DataExchangeUtil {
 //            userInfo.setPrivilege(jsonObject.getString("privilege"));
             userInfo.setHeadImgUrl(jsonObject.getString("headimgurl"));
             userInfo.setCity(jsonObject.getString("city"));
-            userInfo.setCountry(jsonObject.getString("country"));
+            userInfo.setNation(jsonObject.getString("country"));
             userInfo.setProvince(jsonObject.getString("province"));
             userInfo.setSex(jsonObject.getString("sex"));
 

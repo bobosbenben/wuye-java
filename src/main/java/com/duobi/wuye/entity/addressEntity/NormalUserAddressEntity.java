@@ -1,6 +1,6 @@
 package com.duobi.wuye.entity.addressEntity;
 
-import com.duobi.wuye.entity.BaseEntity;
+import com.duobi.wuye.entity.utilEntity.BaseEntity;
 
 public class NormalUserAddressEntity extends BaseEntity {
 

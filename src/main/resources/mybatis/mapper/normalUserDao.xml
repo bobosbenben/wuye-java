@@ -44,14 +44,14 @@
     </sql>
 
     <sql id="addressJoins">
-      left join t_normal_user_address_province p on a.province_id = p.id
-      left join t_normal_user_address_city c on a.city_id = c.id
-      left join t_normal_user_address_country cu on a.country_or_district_id = cu.id
-      left join t_normal_user_address_town t on a.town_id = t.id
-      left join t_normal_user_address_community cm on a.community_id = cm.id
-      left join t_normal_user_address_building b on a.building_id = b.id
-      left join t_normal_user_address_unit u on a.unit_id = u.id
-      left join t_normal_user_address_room r on a.room_id = r.id
+      left join t_normal_user_address_entity p on a.province_id = p.id
+      left join t_normal_user_address_entity c on a.city_id = c.id
+      left join t_normal_user_address_entity cu on a.country_or_district_id = cu.id
+      left join t_normal_user_address_entity t on a.town_id = t.id
+      left join t_normal_user_address_entity cm on a.community_id = cm.id
+      left join t_normal_user_address_entity b on a.building_id = b.id
+      left join t_normal_user_address_entity u on a.unit_id = u.id
+      left join t_normal_user_address_entity r on a.room_id = r.id
     </sql>
 
     <sql id="userJoins">
@@ -75,6 +75,54 @@
         <include refid="addressJoins" />
         <include refid="userJoins" />
         WHERE nu.openid = #{openid} and a.normal_users_default_address = true and a.del_flag = false and nu.del_flag = false
+    </select>
+
+    <select id="getAddressEntityById" parameterType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity" resultType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity">
+        select *
+        from t_normal_user_address_entity
+        where id = #{id} and del_flag = false
+    </select>
+
+    <select id="getCitysAndItsProvinces" parameterType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity" resultType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity">
+        SELECT *
+        FROM t_normal_user_address_entity a
+        WHERE a.del_flag = FALSE AND type IN (#{ADDRESS_ENTITY_TYPE_PROVINCE},#{ADDRESS_ENTITY_TYPE_CITY})
+    </select>
+
+    <select id="getCountriesByCityId"  parameterType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity" resultType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity">
+        select *
+        from t_normal_user_address_entity a
+        where a.del_flag = false and type in (#{ADDRESS_ENTITY_TYPE_COUNTRY}) and parent_id = #{parentId}
+    </select>
+
+    <select id="getTownsByCountryId"  parameterType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity" resultType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity">
+        select *
+        from t_normal_user_address_entity a
+        where a.del_flag = false and type in (#{ADDRESS_ENTITY_TYPE_TOWN}) and parent_id = #{parentId}
+    </select>
+
+    <select id="getCommunitiesByTownId"  parameterType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity" resultType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity">
+        select *
+        from t_normal_user_address_entity a
+        where a.del_flag = false and type in (#{ADDRESS_ENTITY_TYPE_COMMNUITY}) and parent_id = #{parentId}
+    </select>
+
+    <select id="getBuildingsByCommunityId"  parameterType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity" resultType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity">
+        select *
+        from t_normal_user_address_entity a
+        where a.del_flag = false and type in (#{ADDRESS_ENTITY_TYPE_BUILDING}) and parent_id = #{parentId}
+    </select>
+
+    <select id="getUnitsByBuildingId"  parameterType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity" resultType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity">
+        select *
+        from t_normal_user_address_entity a
+        where a.del_flag = false and type in (#{ADDRESS_ENTITY_TYPE_UNIT}) and parent_id = #{parentId}
+    </select>
+
+    <select id="getRoomsByUnitId"  parameterType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity" resultType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity">
+        select *
+        from t_normal_user_address_entity a
+        where a.del_flag = false and type in (#{ADDRESS_ENTITY_TYPE_ROOM}) and parent_id = #{parentId}
     </select>
 
 </mapper>

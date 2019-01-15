@@ -1,6 +1,8 @@
 package com.duobi.wuye.entity;
 
-public class User extends BaseEntity{
+import com.duobi.wuye.entity.utilEntity.BaseEntity;
+
+public class User extends BaseEntity {
     private Long id;
     private String name;
     private int age;

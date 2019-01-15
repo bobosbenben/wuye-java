@@ -1,14 +1,16 @@
 package com.duobi.wuye.entity;
 
 import com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity;
+import com.duobi.wuye.entity.utilEntity.BaseEntity;
 
 import java.util.List;
 
-public class NormalUser extends BaseEntity {
+public class NormalUserEntity extends BaseEntity {
 
     private String openid;
     private String nickName;
     private String sex;     //1-男  2-女
+    private String nation;
     private String province;
     private String city;
     private String country;
@@ -17,9 +19,9 @@ public class NormalUser extends BaseEntity {
     private String unionid;
     private List<NormalUserAddressEntity> normalUserAddressEntityList;
 
-    public NormalUser(){}
+    public NormalUserEntity(){}
 
-    public NormalUser(Long id){
+    public NormalUserEntity(Long id){
         this.setId(id);
     }
 
@@ -45,6 +47,14 @@ public class NormalUser extends BaseEntity {
 
     public void setSex(String sex) {
         this.sex = sex;
+    }
+
+    public String getNation() {
+        return nation;
+    }
+
+    public void setNation(String nation) {
+        this.nation = nation;
     }
 
     public String getProvince() {

@@ -2,8 +2,7 @@ package com.duobi.wuye.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.duobi.wuye.dto.NormalUserAddressDTO;
-import com.duobi.wuye.entity.NormalUser;
-import com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity;
+import com.duobi.wuye.entity.NormalUserEntity;
 import com.duobi.wuye.service.NormalUserService;
 import com.duobi.wuye.utils.CosClientUtil;
 import com.duobi.wuye.utils.ResponseJson;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
@@ -85,9 +83,9 @@ public class WuYeController {
 
         String openid = jsonObject.getString("openid");
 
-        NormalUser normalUser = new NormalUser();
-        normalUser.setOpenid(openid);
-        NormalUserAddressDTO n = normalUserService.getUserDefaultAddressByOpenid(normalUser);
+        NormalUserEntity normalUserEntity = new NormalUserEntity();
+        normalUserEntity.setOpenid(openid);
+        NormalUserAddressDTO n = normalUserService.getUserDefaultAddressByOpenid(normalUserEntity);
 
         responseJson.setSuccess(true);
         if (n != null) responseJson.setTotal(1);
@@ -102,7 +100,7 @@ public class WuYeController {
     public String faultReport(HttpServletRequest request){
         String code = request.getParameter("code");
         String openid = null;
-        NormalUser userInfo = new NormalUser();
+        NormalUserEntity userInfo = new NormalUserEntity();
 
         try {
 //            openid = DataExchangeUtil.getOpenIdByCode(code);

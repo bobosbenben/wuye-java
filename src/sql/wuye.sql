@@ -2,6 +2,8 @@ drop table if exists t_normal_user_address;
 create table t_normal_user_address
 (
   id bigint auto_increment primary key,
+  customer_name varchar(64) comment '联系人',
+  phone_number varchar(12) comment '联系方式',
   province_id bigint comment '省id',
   city_id bigint comment '市id',
   country_or_district_id bigint comment '县或区id',
@@ -16,97 +18,15 @@ create table t_normal_user_address
   create_by bigint not null comment '创建者',
   del_flag boolean default false comment '删除标志'
 );
-# 省
-drop table if exists t_normal_user_address_province;
-create table t_normal_user_address_province
+# 区域实体表
+drop table if exists t_normal_user_address_entity;
+create table t_normal_user_address_entity
 (
   id bigint auto_increment primary key,
+  type varchar(2) comment '01-省 02-市 03-区或县 04-镇 05-小区 06-楼号 07-单元号 08-房间号',
+  parent_id bigint comment '父级区域的id',
   name varchar(256) comment '名称',
-  code varchar(64) comment '代码',
-  short_name varchar(64) comment '简称',
-  create_time timestamp default now(),
-  create_by bigint not null ,
-  del_flag boolean default false
-);
-# 市
-drop table if exists t_normal_user_address_city;
-create table t_normal_user_address_city
-(
-  id bigint auto_increment primary key,
-  name varchar(256) comment '名称',
-  code varchar(64) comment '代码',
-  short_name varchar(64) comment '简称',
-  create_time timestamp default now(),
-  create_by bigint not null ,
-  del_flag boolean default false
-);
-# 县
-drop table if exists t_normal_user_address_country;
-create table t_normal_user_address_country
-(
-  id bigint auto_increment primary key,
-  name varchar(256) comment '名称',
-  code varchar(64) comment '代码',
-  short_name varchar(64) comment '简称',
-  create_time timestamp default now(),
-  create_by bigint not null ,
-  del_flag boolean default false
-);
-# 镇
-drop table if exists t_normal_user_address_town;
-create table t_normal_user_address_town
-(
-  id bigint auto_increment primary key,
-  name varchar(256) comment '名称',
-  code varchar(64) comment '代码',
-  short_name varchar(64) comment '简称',
-  create_time timestamp default now(),
-  create_by bigint not null ,
-  del_flag boolean default false
-);
-# 小区
-drop table if exists t_normal_user_address_community;
-create table t_normal_user_address_community
-(
-  id bigint auto_increment primary key,
-  name varchar(256) comment '名称',
-  code varchar(64) comment '代码',
-  short_name varchar(64) comment '简称',
-  create_time timestamp default now(),
-  create_by bigint not null ,
-  del_flag boolean default false
-);
-# 楼号
-drop table if exists t_normal_user_address_building;
-create table t_normal_user_address_building
-(
-  id bigint auto_increment primary key,
-  name varchar(256) comment '名称',
-  code varchar(64) comment '代码',
-  short_name varchar(64) comment '简称',
-  create_time timestamp default now(),
-  create_by bigint not null ,
-  del_flag boolean default false
-);
-# 单元号
-drop table if exists t_normal_user_address_unit;
-create table t_normal_user_address_unit
-(
-  id bigint auto_increment primary key,
-  name varchar(256) comment '名称',
-  code varchar(64) comment '代码',
-  short_name varchar(64) comment '简称',
-  create_time timestamp default now(),
-  create_by bigint not null ,
-  del_flag boolean default false
-);
-# 房间号
-drop table if exists t_normal_user_address_room;
-create table t_normal_user_address_room
-(
-  id bigint auto_increment primary key,
-  name varchar(256) comment '名称',
-  code varchar(64) comment '代码',
+  code varchar(64) unique comment '代码',
   short_name varchar(64) comment '简称',
   create_time timestamp default now(),
   create_by bigint not null ,

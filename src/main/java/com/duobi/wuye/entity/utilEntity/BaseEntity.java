@@ -1,4 +1,4 @@
-package com.duobi.wuye.entity;
+package com.duobi.wuye.entity.utilEntity;
 
 import java.io.Serializable;
 import java.util.Date;
