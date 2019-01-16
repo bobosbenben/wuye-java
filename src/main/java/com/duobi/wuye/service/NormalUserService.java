@@ -40,7 +40,11 @@ public class NormalUserService {
     public LabelValueTreeEntity getCitiesAndItsProvinces(){
         List<BaseAddressEntity> citiesAndProvinces = normalUserDao.getCitysAndItsProvinces(new BaseAddressEntity());
 
-        return makeTree(citiesAndProvinces,0L);
+        //加入根元素（nation）
+        BaseAddressEntity cityEntity = getAddressEntityById(1L);
+        citiesAndProvinces.add(cityEntity);
+
+        return makeTree(citiesAndProvinces,1L);
     }
 
     public LabelValueTreeEntity getCountriesAndItsTownsByCityId(Long cityId){
@@ -84,23 +88,66 @@ public class NormalUserService {
         return makeTree(communities,townId);
     }
 
+    public LabelValueTreeEntity getBuildingsAndItsUnitsAndRoomsByCommunityId(Long communityId){
+        //加载building
+        BaseAddressEntity baseAddressEntity = new BaseAddressEntity();
+        baseAddressEntity.setParentId(communityId);
+        List<BaseAddressEntity> buildingsAndUnitsAndRooms = normalUserDao.getBuildingsByCommunityId(baseAddressEntity);
+
+        //加载building下的units
+        List<Long> buildingIds = new ArrayList<>();
+        List<BaseAddressEntity> units = new ArrayList<>();
+        for (BaseAddressEntity building : buildingsAndUnitsAndRooms){
+            if (!buildingIds.contains(building.getId())){
+                buildingIds.add(building.getId());
+                BaseAddressEntity baseAddressEntityForUnit = new BaseAddressEntity();
+                baseAddressEntityForUnit.setParentId(building.getId());
+                List<BaseAddressEntity> tempUnits = normalUserDao.getUnitsByBuildingId(baseAddressEntityForUnit);
+                units.addAll(tempUnits);
+            }
+        }
+
+        //加载unit下的room
+        List<Long> unitIds = new ArrayList<>();
+        List<BaseAddressEntity> rooms = new ArrayList<>();
+        for (BaseAddressEntity unit : units){
+            if (!unitIds.contains(unit.getId())){
+                unitIds.add(unit.getId());
+                BaseAddressEntity baseAddressEntityForRoom = new BaseAddressEntity();
+                baseAddressEntityForRoom.setParentId(unit.getId());
+                List<BaseAddressEntity> tempRooms = normalUserDao.getRoomsByUnitId(baseAddressEntityForRoom);
+                rooms.addAll(tempRooms);
+            }
+        }
+
+        //加入根元素（city）
+        buildingsAndUnitsAndRooms.addAll(units);
+        buildingsAndUnitsAndRooms.addAll(rooms);
+        BaseAddressEntity communityEntity = getAddressEntityById(communityId);
+        buildingsAndUnitsAndRooms.add(communityEntity);
+
+        //排列为树
+        return makeTree(buildingsAndUnitsAndRooms,communityId);
+    }
+
     private LabelValueTreeEntity makeTree(List<BaseAddressEntity> baseAddressEntityList,Long rootId){
-        LabelValueTreeEntity tree = new LabelValueTreeEntity();
+        LabelValueTreeEntity tree = null;
         Map<Long,LabelValueTreeEntity> map = new HashMap<>();
 
-        List<LabelValueTreeEntity> rootList = new ArrayList<>();
         for (BaseAddressEntity address:baseAddressEntityList){
             LabelValueTreeEntity temp = new LabelValueTreeEntity();
             temp.setId(address.getId());
             temp.setParentId(address.getParentId());
             temp.setLabel(address.getShortName());
-            temp.setValue(address.getCode());
+//            temp.setValue(address.getCode());     //code不唯一，因为不同小区的楼号可能都是5号楼，code就都是'5'，所以改用id
+            temp.setValue(address.getId().toString());
             map.put(address.getId(),temp);
         }
 
         for (LabelValueTreeEntity node : map.values()){
             Long parentId = node.getParentId();
-            if (parentId.equals(rootId)){
+            Long id = node.getId();
+            if (id.equals(rootId)){
                 tree = node;
             }
             if (map.containsKey(parentId)){

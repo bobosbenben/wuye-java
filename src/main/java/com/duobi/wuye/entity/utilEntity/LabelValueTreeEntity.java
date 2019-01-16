@@ -1,5 +1,7 @@
 package com.duobi.wuye.entity.utilEntity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,7 @@ public class LabelValueTreeEntity {
     private String value;
     private List<LabelValueTreeEntity> children;
 
+    @JsonIgnore
     public Long getId() {
         return id;
     }
@@ -19,6 +22,7 @@ public class LabelValueTreeEntity {
         this.id = id;
     }
 
+    @JsonIgnore
     public Long getParentId() {
         return parentId;
     }

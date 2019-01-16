@@ -104,7 +104,7 @@
     <select id="getCommunitiesByTownId"  parameterType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity" resultType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity">
         select *
         from t_normal_user_address_entity a
-        where a.del_flag = false and type in (#{ADDRESS_ENTITY_TYPE_COMMNUITY}) and parent_id = #{parentId}
+        where a.del_flag = false and type in (#{ADDRESS_ENTITY_TYPE_COMMUNITY}) and parent_id = #{parentId}
     </select>
 
     <select id="getBuildingsByCommunityId"  parameterType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity" resultType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity">

@@ -25,7 +25,9 @@ public class TreeFunctionTest {
     @Test
     public void test(){
 //        List<BaseAddressEntity> baseAddressEntityList =  normalUserDao.getCitysAndItsProvinces(new BaseAddressEntity());
-        LabelValueTreeEntity labelValueTreeEntity = normalUserService.getCountriesAndItsTownsByCityId(2L);
+//        LabelValueTreeEntity labelValueTreeEntity = normalUserService.getCitiesAndItsProvinces();
+//        LabelValueTreeEntity labelValueTreeEntity = normalUserService.getCountriesAndItsTownsByCityId(3L);
+        LabelValueTreeEntity labelValueTreeEntity = normalUserService.getBuildingsAndItsUnitsAndRoomsByCommunityId(6L);
         logger.info("结果是：{}",labelValueTreeEntity);
     }
 

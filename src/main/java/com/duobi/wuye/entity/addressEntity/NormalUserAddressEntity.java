@@ -4,6 +4,8 @@ import com.duobi.wuye.entity.utilEntity.BaseEntity;
 
 public class NormalUserAddressEntity extends BaseEntity {
 
+    private String customerName;                                //客户名称
+    private String phoneNumber;                                 //联系方式
     private ProvinceEntity provinceEntity;                      //省
     private CityEntity cityEntity;                              //市
     private CountryOrDistrictEntity countryOrDistrictEntity;    //县、区、旗
@@ -14,6 +16,22 @@ public class NormalUserAddressEntity extends BaseEntity {
     private RoomEntity roomEntity;                              //房间号
     private Long normalUserId;                                  //所属用户的id
     private Boolean normalUsersDefaultAddress;                  //是否是所属用户的默认小区
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public ProvinceEntity getProvinceEntity() {
         return provinceEntity;

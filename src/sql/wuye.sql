@@ -23,10 +23,10 @@ drop table if exists t_normal_user_address_entity;
 create table t_normal_user_address_entity
 (
   id bigint auto_increment primary key,
-  type varchar(2) comment '01-省 02-市 03-区或县 04-镇 05-小区 06-楼号 07-单元号 08-房间号',
+  type varchar(2) comment '00-国家 01-省 02-市 03-区或县 04-镇 05-小区 06-楼号 07-单元号 08-房间号',
   parent_id bigint comment '父级区域的id',
   name varchar(256) comment '名称',
-  code varchar(64) unique comment '代码',
+  code varchar(64) comment '代码',
   short_name varchar(64) comment '简称',
   create_time timestamp default now(),
   create_by bigint not null ,
