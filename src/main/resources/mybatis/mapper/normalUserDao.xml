@@ -125,4 +125,43 @@
         where a.del_flag = false and type in (#{ADDRESS_ENTITY_TYPE_ROOM}) and parent_id = #{parentId}
     </select>
 
+    <select id="getNormalUserByOpenid">
+        select *
+        from t_normal_user
+        where openid = #{openid} and del_flag =false
+    </select>
+
+    <insert id="insertNormalUserAddress" parameterType="com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity">
+        insert into t_normal_user_address(
+          customer_name,
+          phone_number,
+          province_id,
+          city_id,
+          country_or_district_id,
+          town_id,
+          community_id,
+          building_id,
+          unit_id,
+          room_id,
+          normal_users_default_address,
+          normal_user_id,
+          create_by
+        )
+        values (
+          #{customerName},
+          #{phoneNumber},
+          #{provinceEntity.id},
+          #{cityEntity.id},
+          #{countryOrDistrictEntity.id},
+          #{townEntity.id},
+          #{communityEntity.id},
+          #{buildingEntity.id},
+          #{unitEntity.id},
+          #{roomEntity.id},
+          #{normalUsersDefaultAddress},
+          #{normalUserId},
+          #{createBy}
+        )
+    </insert>
+
 </mapper>

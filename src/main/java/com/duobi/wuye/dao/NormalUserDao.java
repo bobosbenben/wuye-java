@@ -1,5 +1,6 @@
 package com.duobi.wuye.dao;
 
+import com.duobi.wuye.entity.NormalUserEntity;
 import com.duobi.wuye.entity.addressEntity.BaseAddressEntity;
 import com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity;
 
@@ -26,6 +27,10 @@ public interface NormalUserDao {
     public List<BaseAddressEntity> getRoomsByUnitId(BaseAddressEntity baseAddressEntity);
 
     public BaseAddressEntity getAddressEntityById(BaseAddressEntity baseAddressEntity);
+
+    public NormalUserEntity getNormalUserByOpenid(String openid);
+
+    public void insertNormalUserAddress(NormalUserAddressEntity normalUserAddress);
 
 
 }

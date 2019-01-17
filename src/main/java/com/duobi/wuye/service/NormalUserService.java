@@ -6,6 +6,7 @@ import com.duobi.wuye.entity.NormalUserEntity;
 import com.duobi.wuye.entity.addressEntity.BaseAddressEntity;
 import com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity;
 import com.duobi.wuye.entity.utilEntity.LabelValueTreeEntity;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -178,6 +179,52 @@ public class NormalUserService {
         normalUserAddressDTO.setRoom(n.getRoomEntity().getShortName());
 
         return normalUserAddressDTO;
+    }
+
+    public void checkNewNormalUserAddressValidation(NormalUserEntity normalUser, NormalUserAddressEntity normalUserAddress) throws Exception{
+
+        if (StringUtils.isBlank(normalUser.getOpenid())) {
+            throw new Exception("无法识别的客户");
+        }
+        if (StringUtils.isBlank(normalUserAddress.getCustomerName())){
+            throw new Exception("请填写您的称呼");
+        }
+        if (StringUtils.isBlank(normalUserAddress.getPhoneNumber())){
+            throw new Exception("请填写您的联系方式");
+        }
+        if (null == normalUserAddress.getProvinceEntity() || null == normalUserAddress.getProvinceEntity().getId()){
+            throw new Exception("客户地址中未设置省份");
+        }
+        if (null == normalUserAddress.getCityEntity() || null == normalUserAddress.getCityEntity().getId()){
+            throw new Exception("客户地址中未设置城市");
+        }
+        if (null == normalUserAddress.getCountryOrDistrictEntity() || null == normalUserAddress.getCountryOrDistrictEntity().getId()){
+            throw new Exception("客户地址中未设置县或区");
+        }
+        if (null == normalUserAddress.getTownEntity() || null == normalUserAddress.getTownEntity().getId()){
+            throw new Exception("客户地址中未设置镇或街道");
+        }
+        if (null == normalUserAddress.getCommunityEntity() || null == normalUserAddress.getCommunityEntity().getId()){
+            throw new Exception("客户地址中未设置小区");
+        }
+        if (null == normalUserAddress.getBuildingEntity() || null == normalUserAddress.getBuildingEntity().getId()){
+            throw new Exception("客户地址中未设置楼号");
+        }
+        if (null == normalUserAddress.getUnitEntity() || null == normalUserAddress.getUnitEntity().getId()){
+            throw new Exception("客户地址中未设置单元号");
+        }
+        if (null == normalUserAddress.getRoomEntity() || null == normalUserAddress.getRoomEntity().getId()){
+            throw new Exception("客户地址中未设置房间号");
+        }
+
+    }
+
+    public NormalUserEntity getNormalUserInfoByOpenid(String openid){
+        return normalUserDao.getNormalUserByOpenid(openid);
+    }
+
+    public void insertNewNormalUserAddress(NormalUserAddressEntity normalUserAddress){
+        normalUserDao.insertNormalUserAddress(normalUserAddress);
     }
 
 

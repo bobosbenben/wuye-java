@@ -38,7 +38,7 @@ drop table if exists t_normal_user;
 create table t_normal_user
 (
   id bigint auto_increment primary key,
-  openid varchar(64) comment 'openid',
+  openid varchar(64) unique comment 'openid',
   nick_name varchar(128) comment '昵称',
   sex varchar(1) comment '性别：1-男，2-女',
   nation varchar(64) comment '国家',

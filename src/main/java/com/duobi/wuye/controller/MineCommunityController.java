@@ -1,6 +1,7 @@
 package com.duobi.wuye.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.duobi.wuye.dto.NormalUserAddressFromClientDTO;
 import com.duobi.wuye.entity.NormalUserEntity;
 import com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity;
 import com.duobi.wuye.entity.utilEntity.LabelValueTreeEntity;
@@ -46,10 +47,22 @@ public class MineCommunityController {
     @CrossOrigin( maxAge = 3600)
     @RequestMapping(value = "/new")
     public @ResponseBody
-    Object newMineCommunity(@RequestBody JSONObject jsonObject){
+    Object newMineCommunity(@RequestBody NormalUserAddressFromClientDTO dto){
         ResponseJson responseJson = new ResponseJson();
 
-        String openid = jsonObject.getString("openid");
+        NormalUserAddressEntity normalUserAddress = dto.convertOne(dto);
+        NormalUserEntity normalUser = dto.convertTwo(dto);
+
+        try {
+            normalUserService.checkNewNormalUserAddressValidation(normalUser,normalUserAddress);
+            NormalUserEntity completeNormalUserInfo = normalUserService.getNormalUserInfoByOpenid(normalUser.getOpenid());
+            normalUserAddress.setNormalUserId(completeNormalUserInfo.getId());
+            normalUserService.insertNewNormalUserAddress(normalUserAddress);
+        }catch (Exception e){
+            responseJson.setSuccess(false);
+            responseJson.setMsg(e.getMessage());
+            return responseJson;
+        }
 
         return responseJson;
     }
