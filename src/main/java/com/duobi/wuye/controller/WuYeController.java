@@ -99,15 +99,18 @@ public class WuYeController {
     @RequestMapping(value = "/faultreport")
     public String faultReport(HttpServletRequest request){
         String code = request.getParameter("code");
-        String openid = null;
-        NormalUserEntity userInfo = new NormalUserEntity();
+        NormalUserEntity userInfo = null;
 
         try {
-//            openid = DataExchangeUtil.getOpenIdByCode(code);
             userInfo = DataExchangeUtil.getUserInfoByCode(code);
+            if (userInfo == null || userInfo.getOpenid() == null) throw new Exception("通过code获取客户的openid失败");
+            NormalUserEntity normalUser = normalUserService.getNormalUserInfoByOpenid(userInfo.getOpenid());
+            //判断该openid的客户是否已经存在，不存在时入库
+            if (normalUser == null) normalUserService.insertNewNormalUser(userInfo);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //这里应该新增一个前端的错误处理页面，当userInfo==null 的时候跳转过去
 
         String url = "redirect:https://www.duobifuwu.com/#/baoxiu/"+userInfo.getOpenid();
         return url;

@@ -32,5 +32,11 @@ public interface NormalUserDao {
 
     public void insertNormalUserAddress(NormalUserAddressEntity normalUserAddress);
 
+    public void insertNormalUser(NormalUserEntity normalUserEntity);
+
+    public void updateUsersDefaultAddressFlagByUserId(Long normalUserId);
+
+    public List<NormalUserAddressEntity> getUsersAddressListByNormalUserId(Long normalUserId);
+
 
 }

@@ -4,6 +4,8 @@
 
     <sql id="normalUserAddressColumn">
         a.id AS id,
+        a.customer_name,
+        a.phone_number,
         a.province_id as "province_entity.id",
         p.name as "province_entity.name",
         p.code as "province_entity.code",
@@ -24,6 +26,7 @@
         cm.name as "community_entity.name",
         cm.code as "community_entity.code",
         cm.short_name as "community_entity.short_name",
+        cm.img_url as "community_entity.img_url",
         a.building_id as "building_entity.id",
         b.name as "building_entity.name",
         b.code as "building_entity.code",
@@ -75,7 +78,22 @@
         <include refid="addressJoins" />
         <include refid="userJoins" />
         WHERE nu.openid = #{openid} and a.normal_users_default_address = true and a.del_flag = false and nu.del_flag = false
+        limit 1
     </select>
+
+    <select id="getUsersAddressListByNormalUserId" resultType="com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity">
+        select
+        <include refid="normalUserAddressColumn" />
+        from t_normal_user_address a
+        <include refid="addressJoins" />
+        WHERE a.normal_user_id = #{normalUserId} and a.del_flag = false
+    </select>
+
+    <update id="updateUsersDefaultAddressFlagByUserId">
+        update t_normal_user_address
+        set normal_users_default_address = false
+        where normal_user_id = #{normalUserId} and del_flag = false
+    </update>
 
     <select id="getAddressEntityById" parameterType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity" resultType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity">
         select *
@@ -125,7 +143,7 @@
         where a.del_flag = false and type in (#{ADDRESS_ENTITY_TYPE_ROOM}) and parent_id = #{parentId}
     </select>
 
-    <select id="getNormalUserByOpenid">
+    <select id="getNormalUserByOpenid" resultType="com.duobi.wuye.entity.NormalUserEntity">
         select *
         from t_normal_user
         where openid = #{openid} and del_flag =false
@@ -160,6 +178,33 @@
           #{roomEntity.id},
           #{normalUsersDefaultAddress},
           #{normalUserId},
+          #{createBy}
+        )
+    </insert>
+
+    <insert id="insertNormalUser" parameterType="com.duobi.wuye.entity.NormalUserEntity">
+        insert into t_normal_user(
+          openid,
+          nick_name,
+          sex,
+          nation,
+          province,
+          city,
+          country,
+          head_img_url,
+          unionid,
+          create_by
+        )
+        values (
+          #{openid},
+          #{nickName},
+          #{sex},
+          #{nation},
+          #{province},
+          #{city},
+          #{country},
+          #{headImgUrl},
+          #{unionid},
           #{createBy}
         )
     </insert>

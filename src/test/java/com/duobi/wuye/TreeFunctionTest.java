@@ -1,6 +1,8 @@
 package com.duobi.wuye;
 
+import com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity;
 import com.duobi.wuye.entity.utilEntity.LabelValueTreeEntity;
+import com.duobi.wuye.entity.utilEntity.Pager;
 import com.duobi.wuye.service.NormalUserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +32,19 @@ public class TreeFunctionTest {
         LabelValueTreeEntity labelValueTreeEntity = normalUserService.getBuildingsAndItsUnitsAndRoomsByCommunityId(6L);
         logger.info("结果是：{}",labelValueTreeEntity);
     }
+
+    @Test
+    public void testPageHelper(){
+        Pager<NormalUserAddressEntity> pager  = new Pager<>();
+        pager.setOrderBy("id desc");
+        pager.setPageNo(1);
+        pager.setPageSize(1);
+
+        Pager list = normalUserService.getUsersAddressListByNormalUserId(pager,1L);
+        logger.info("结果是: {}",list);
+
+    }
+
 
     @Test
     public void testList(){

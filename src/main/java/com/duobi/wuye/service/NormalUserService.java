@@ -6,6 +6,9 @@ import com.duobi.wuye.entity.NormalUserEntity;
 import com.duobi.wuye.entity.addressEntity.BaseAddressEntity;
 import com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity;
 import com.duobi.wuye.entity.utilEntity.LabelValueTreeEntity;
+import com.duobi.wuye.entity.utilEntity.Pager;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,11 @@ public class NormalUserService {
         return copyNormalUserAddressEntityToDTO(n);
     }
 
+    /**
+     * 根据openid获取用户的默认地址
+     * @param normalUserEntity
+     * @return
+     */
     public NormalUserAddressDTO getUserDefaultAddressByOpenid(NormalUserEntity normalUserEntity){
         if (normalUserEntity == null) return null;
         NormalUserAddressEntity n =  normalUserDao.getUsersDefaultAddressByOpenid(normalUserEntity.getOpenid());
@@ -38,6 +46,10 @@ public class NormalUserService {
 
     }
 
+    /**
+     * 获取全部省和城市
+     * @return
+     */
     public LabelValueTreeEntity getCitiesAndItsProvinces(){
         List<BaseAddressEntity> citiesAndProvinces = normalUserDao.getCitysAndItsProvinces(new BaseAddressEntity());
 
@@ -48,6 +60,11 @@ public class NormalUserService {
         return makeTree(citiesAndProvinces,1L);
     }
 
+    /**
+     * 根据县或区的id获取它包含的全部镇
+     * @param cityId
+     * @return
+     */
     public LabelValueTreeEntity getCountriesAndItsTownsByCityId(Long cityId){
         //加载country
         BaseAddressEntity baseAddressEntityForCountry = new BaseAddressEntity();
@@ -76,6 +93,11 @@ public class NormalUserService {
         return makeTree(countriesAndItsTowns,cityId);
     }
 
+    /**
+     * 根据镇id获取该镇的全部小区
+     * @param townId
+     * @return
+     */
     public LabelValueTreeEntity getCommuntiesByTownId(Long townId){
         BaseAddressEntity baseAddressEntity = new BaseAddressEntity();
         baseAddressEntity.setParentId(townId);
@@ -89,6 +111,11 @@ public class NormalUserService {
         return makeTree(communities,townId);
     }
 
+    /**
+     * 根据小区id获取该小区的全部楼号、单元号、房号
+     * @param communityId
+     * @return
+     */
     public LabelValueTreeEntity getBuildingsAndItsUnitsAndRoomsByCommunityId(Long communityId){
         //加载building
         BaseAddressEntity baseAddressEntity = new BaseAddressEntity();
@@ -131,7 +158,14 @@ public class NormalUserService {
         return makeTree(buildingsAndUnitsAndRooms,communityId);
     }
 
+    /**
+     * 将全部“点”信息组装为树类型
+     * @param baseAddressEntityList
+     * @param rootId
+     * @return
+     */
     private LabelValueTreeEntity makeTree(List<BaseAddressEntity> baseAddressEntityList,Long rootId){
+        if (baseAddressEntityList == null||baseAddressEntityList.size() == 0) return null;
         LabelValueTreeEntity tree = null;
         Map<Long,LabelValueTreeEntity> map = new HashMap<>();
 
@@ -160,6 +194,11 @@ public class NormalUserService {
         return tree;
     }
 
+    /**
+     * 根据id获取房屋的基础信息
+     * @param id
+     * @return
+     */
     public BaseAddressEntity getAddressEntityById(Long id){
         BaseAddressEntity baseAddressEntity = new BaseAddressEntity();
         baseAddressEntity.setId(id);
@@ -167,6 +206,11 @@ public class NormalUserService {
         return normalUserDao.getAddressEntityById(baseAddressEntity);
     }
 
+    /**
+     * 将客户房屋信息转化为前端需要的格式
+     * @param n
+     * @return
+     */
     private NormalUserAddressDTO copyNormalUserAddressEntityToDTO(NormalUserAddressEntity n){
         NormalUserAddressDTO normalUserAddressDTO = new NormalUserAddressDTO();
         normalUserAddressDTO.setProvince(n.getProvinceEntity().getShortName());
@@ -181,6 +225,12 @@ public class NormalUserService {
         return normalUserAddressDTO;
     }
 
+    /**
+     * 判断客户提交的房屋信息是否有效
+     * @param normalUser
+     * @param normalUserAddress
+     * @throws Exception
+     */
     public void checkNewNormalUserAddressValidation(NormalUserEntity normalUser, NormalUserAddressEntity normalUserAddress) throws Exception{
 
         if (StringUtils.isBlank(normalUser.getOpenid())) {
@@ -219,13 +269,62 @@ public class NormalUserService {
 
     }
 
+    /**
+     * 根据openid获取客户的基础信息
+     * @param openid
+     * @return
+     */
     public NormalUserEntity getNormalUserInfoByOpenid(String openid){
         return normalUserDao.getNormalUserByOpenid(openid);
     }
 
-    public void insertNewNormalUserAddress(NormalUserAddressEntity normalUserAddress){
+    /**
+     * 客户新增房屋
+     * @param normalUserAddress
+     * @throws Exception
+     */
+    public void insertNewNormalUserAddress(NormalUserAddressEntity normalUserAddress) throws Exception{
+        if (normalUserAddress == null ||normalUserAddress.getNormalUsersDefaultAddress() == null || normalUserAddress.getNormalUserId() == null) throw new Exception("修改客户地址的“是否默认地址”字段时错误，提供的原始信息不全");
+        if (normalUserAddress.getNormalUsersDefaultAddress() == true) { //新增客户地址前，判断新增的地址是否为“默认地址”，如果为是，则将该用户的其他地址的“默认地址”字段都修改为false
+            updateUsersDefaultAddressFlagByUserId(normalUserAddress.getNormalUserId());
+        }
         normalUserDao.insertNormalUserAddress(normalUserAddress);
     }
 
+    /**
+     * 新增一个用户，包含用户的openid，customerName等
+     * @param normalUserEntity
+     */
+    public void insertNewNormalUser(NormalUserEntity normalUserEntity){
+        normalUserDao.insertNormalUser(normalUserEntity);
+    }
 
+    /**
+     * 根据用户的id，将该用户的所有地址“默认地址”字段修改为false
+     * @param normalUserId
+     */
+    public void updateUsersDefaultAddressFlagByUserId(Long normalUserId){
+        normalUserDao.updateUsersDefaultAddressFlagByUserId(normalUserId);
+    }
+
+
+    public Pager<NormalUserAddressDTO> getUsersAddressListByNormalUserId(Pager pager,Long normalUserId){
+        PageHelper.startPage(pager.getPageNo(),pager.getPageSize(),pager.getOrderBy());
+        List<NormalUserAddressEntity> list = normalUserDao.getUsersAddressListByNormalUserId(normalUserId);
+        List<NormalUserAddressDTO> dtoList = new ArrayList<>();
+
+        NormalUserAddressDTO dto = new NormalUserAddressDTO();
+        for (NormalUserAddressEntity entity : list){
+            dtoList.add(dto.convert(entity));
+        }
+
+        Page<NormalUserAddressEntity> listAddress = (Page<NormalUserAddressEntity>)list;
+        Pager<NormalUserAddressDTO> pagerAddress = new Pager<>();
+        pagerAddress.setList(dtoList);
+        pagerAddress.setCount(listAddress.getTotal());
+        pagerAddress.setPageNo(pager.getPageNo());
+        pagerAddress.setPageSize(pager.getPageSize());
+
+        return pagerAddress;
+    }
 }

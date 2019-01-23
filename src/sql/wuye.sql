@@ -15,7 +15,7 @@ create table t_normal_user_address
   normal_user_id bigint comment '该地址所属普通用户的id',
   normal_users_default_address boolean comment '是否是用户的默认小区',
   create_time timestamp default now() comment '创建时间',
-  create_by bigint not null comment '创建者',
+  create_by bigint default 1 comment '创建者',
   del_flag boolean default false comment '删除标志'
 );
 # 区域实体表
@@ -28,8 +28,9 @@ create table t_normal_user_address_entity
   name varchar(256) comment '名称',
   code varchar(64) comment '代码',
   short_name varchar(64) comment '简称',
+  img_url varchar(256) comment '图片路径',
   create_time timestamp default now(),
-  create_by bigint not null ,
+  create_by bigint default 1,
   del_flag boolean default false
 );
 
@@ -48,6 +49,6 @@ create table t_normal_user
   head_img_url varchar(256) comment '头像地址',
   unionid varchar(64) comment '统一id',
   create_time timestamp default now() comment '创建时间',
-  create_by bigint not null ,
+  create_by bigint default 1 ,
   del_flag boolean default false
 );

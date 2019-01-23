@@ -1,10 +1,12 @@
 package com.duobi.wuye.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.duobi.wuye.dto.NormalUserAddressDTO;
 import com.duobi.wuye.dto.NormalUserAddressFromClientDTO;
 import com.duobi.wuye.entity.NormalUserEntity;
 import com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity;
 import com.duobi.wuye.entity.utilEntity.LabelValueTreeEntity;
+import com.duobi.wuye.entity.utilEntity.Pager;
 import com.duobi.wuye.service.NormalUserService;
 import com.duobi.wuye.utils.ResponseJson;
 import com.duobi.wuye.utils.weixinutils.DataExchangeUtil;
@@ -18,12 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/minecommunity")
 public class MineCommunityController {
 
-    private static Logger logger = LoggerFactory.getLogger(MineCommunityController.class);
+    private Logger logger = LoggerFactory.getLogger(HelloWorldController.class);
 
     @Autowired
     private NormalUserService normalUserService;
@@ -56,9 +59,13 @@ public class MineCommunityController {
         try {
             normalUserService.checkNewNormalUserAddressValidation(normalUser,normalUserAddress);
             NormalUserEntity completeNormalUserInfo = normalUserService.getNormalUserInfoByOpenid(normalUser.getOpenid());
+            if (completeNormalUserInfo == null || completeNormalUserInfo.getId() == null) throw new Exception("无法获取客户信息");
+
             normalUserAddress.setNormalUserId(completeNormalUserInfo.getId());
+            normalUserAddress.setCreateBy(completeNormalUserInfo.getId());
             normalUserService.insertNewNormalUserAddress(normalUserAddress);
         }catch (Exception e){
+            e.printStackTrace();
             responseJson.setSuccess(false);
             responseJson.setMsg(e.getMessage());
             return responseJson;
@@ -73,6 +80,7 @@ public class MineCommunityController {
     Object getDistrictByOpenid(){
         LabelValueTreeEntity labelValueTreeEntity = normalUserService.getCitiesAndItsProvinces();
 
+        if (null == labelValueTreeEntity) return new ArrayList<>();
         return labelValueTreeEntity.getChildren();
     }
 
@@ -84,6 +92,7 @@ public class MineCommunityController {
         Long cityId = Long.parseLong(jsonObject.getString("cityId"));
         LabelValueTreeEntity labelValueTreeEntity = normalUserService.getCountriesAndItsTownsByCityId(cityId);
 
+        if (null == labelValueTreeEntity) return new ArrayList<>();
         return labelValueTreeEntity.getChildren();
     }
 
@@ -95,6 +104,7 @@ public class MineCommunityController {
         Long townId = Long.parseLong(jsonObject.getString("townId"));
         LabelValueTreeEntity labelValueTreeEntity = normalUserService.getCommuntiesByTownId(townId);
 
+        if (null == labelValueTreeEntity) return new ArrayList<>();
         return labelValueTreeEntity.getChildren();
     }
 
@@ -106,7 +116,33 @@ public class MineCommunityController {
         Long communityId = Long.parseLong(jsonObject.getString("communityId"));
         LabelValueTreeEntity labelValueTreeEntity = normalUserService.getBuildingsAndItsUnitsAndRoomsByCommunityId(communityId);
 
+        if (null == labelValueTreeEntity) return new ArrayList<>();
         return labelValueTreeEntity.getChildren();
+    }
+
+    @CrossOrigin( maxAge = 3600)
+    @RequestMapping(value = "/getminehouselist")
+    public @ResponseBody
+    Object getMineHouseList(@RequestBody JSONObject jsonObject){
+        ResponseJson responseJson = new ResponseJson();
+
+        String openid = jsonObject.getString("openid");
+        Pager pager = jsonObject.getObject("page",Pager.class);
+        try {
+            NormalUserEntity completeNormalUserInfo = normalUserService.getNormalUserInfoByOpenid(openid);
+            if (completeNormalUserInfo == null || completeNormalUserInfo.getId() == null) throw new Exception("无法获取客户信息");
+            Pager<NormalUserAddressDTO> addressPager = normalUserService.getUsersAddressListByNormalUserId(pager,completeNormalUserInfo.getId());
+            responseJson.setSuccess(true);
+            responseJson.setTotal((int)addressPager.getCount());
+            responseJson.setData(addressPager.getList());
+        }catch (Exception e){
+            responseJson.setSuccess(false);
+            responseJson.setMsg(e.getMessage());
+            responseJson.setTotal(0);
+            return responseJson;
+        }
+
+        return responseJson;
     }
 
 

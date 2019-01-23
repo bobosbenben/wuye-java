@@ -1,7 +1,10 @@
 package com.duobi.wuye.dto;
 
-public class NormalUserAddressDTO extends BaseDTO{
+import com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity;
 
+public class NormalUserAddressDTO extends BaseDTO implements DTOConverterForOne<NormalUserAddressEntity,NormalUserAddressDTO>{
+
+    private Long id;
     private String province;
     private String city;
     private String country;
@@ -10,9 +13,21 @@ public class NormalUserAddressDTO extends BaseDTO{
     private String building;
     private String unit;
     private String room;
+    private String communityImgUrl;
+    private String customerName;
+    private String phoneNumber;
+    private Boolean normalUsersDefaultAddress;
 
     public String getProvince() {
         return province;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setProvince(String province) {
@@ -73,5 +88,58 @@ public class NormalUserAddressDTO extends BaseDTO{
 
     public void setRoom(String room) {
         this.room = room;
+    }
+
+    public String getCommunityImgUrl() {
+        return communityImgUrl;
+    }
+
+    public void setCommunityImgUrl(String communityImgUrl) {
+        this.communityImgUrl = communityImgUrl;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Boolean getNormalUsersDefaultAddress() {
+        return normalUsersDefaultAddress;
+    }
+
+    public void setNormalUsersDefaultAddress(Boolean normalUsersDefaultAddress) {
+        this.normalUsersDefaultAddress = normalUsersDefaultAddress;
+    }
+
+    @Override
+    public NormalUserAddressDTO convert(NormalUserAddressEntity o) {
+        NormalUserAddressDTO dto = new NormalUserAddressDTO();
+        dto.setId(o.getId());
+
+        dto.setProvince(o.getProvinceEntity().getShortName());
+        dto.setCity(o.getCityEntity().getShortName());
+        dto.setCountry(o.getCountryOrDistrictEntity().getShortName());
+        dto.setTown(o.getTownEntity().getShortName());
+        dto.setCommunity(o.getCommunityEntity().getShortName());
+        dto.setBuilding(o.getBuildingEntity().getShortName());
+        dto.setUnit(o.getUnitEntity().getShortName());
+        dto.setRoom(o.getRoomEntity().getShortName());
+        dto.setCommunityImgUrl(o.getCommunityEntity().getImgUrl());
+        dto.setCustomerName(o.getCustomerName());
+        dto.setPhoneNumber(o.getPhoneNumber());
+        dto.setNormalUsersDefaultAddress(o.getNormalUsersDefaultAddress());
+
+        return dto;
     }
 }
