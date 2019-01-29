@@ -52,3 +52,43 @@ create table t_normal_user
   create_by bigint default 1 ,
   del_flag boolean default false
 );
+
+#报修投诉列表
+drop table if exists t_problem;
+create table t_problem
+(
+  id bigint auto_increment primary key,
+  openid varchar(64) comment '客户的openid',
+  normal_user_id bigint comment '客户的id',
+  problem_type_id bigint comment '报修问题类型的id',
+  problem_description varchar(256) comment '报修问题描述',
+  appointment_time timestamp comment '预约的截止时间',
+  create_time timestamp default now() comment '创建时间',
+  create_by bigint default 1 comment '',
+  del_flag boolean default false comment ''
+);
+
+#问题类型表
+drop table if exists t_problem_type;
+create table t_problem_type
+(
+  id bigint auto_increment primary key,
+  name varchar(64) comment '问题类型名称',
+  short_name varchar(32) comment '简称',
+  description varchar(64) comment '描述',
+  create_time timestamp default now() comment '',
+  create_by bigint default 1 comment '',
+  del_flag boolean default false comment ''
+);
+
+#报修问题关联图片表
+drop table if exists t_problem_picture;
+create table t_problem_picture
+(
+  id bigint auto_increment primary key,
+  problem_id bigint comment '问题id',
+  url varchar(256) comment '保存在对象存储服务器上的url',
+  create_time timestamp default now() comment '',
+  create_by bigint default 1 comment '',
+  del_flag boolean default false comment ''
+);

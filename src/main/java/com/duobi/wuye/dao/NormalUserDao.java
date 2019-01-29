@@ -38,5 +38,7 @@ public interface NormalUserDao {
 
     public List<NormalUserAddressEntity> getUsersAddressListByNormalUserId(Long normalUserId);
 
+    public NormalUserAddressEntity getUsersAddressByNormalUserAddressId(Long normalUserAddressId);
+
 
 }

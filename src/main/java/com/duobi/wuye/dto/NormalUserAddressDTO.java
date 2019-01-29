@@ -124,6 +124,7 @@ public class NormalUserAddressDTO extends BaseDTO implements DTOConverterForOne<
 
     @Override
     public NormalUserAddressDTO convert(NormalUserAddressEntity o) {
+        if (o == null) return null;
         NormalUserAddressDTO dto = new NormalUserAddressDTO();
         dto.setId(o.getId());
 

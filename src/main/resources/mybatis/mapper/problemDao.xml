@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.duobi.wuye.dao.ProblemDao">
+
+    <resultMap id="problemResult" type="com.duobi.wuye.entity.ProblemEntity">
+        <id property="id" column="id" />
+        <result property="openid" column="openid" />
+        <result property="appointmentTime" column="appointment_time" />
+        <association property="normalUser" javaType="com.duobi.wuye.entity.NormalUserEntity">
+            <id property="id" column="normal_user_id" />
+        </association>
+        <association property="problemType" javaType="com.duobi.wuye.entity.ProblemTypeEntity">
+            <id property="id" column="problem_type_id" />
+            <result property="name" column="problem_type_name" />
+        </association>
+    </resultMap>
+
+    <insert id="insertProblem" useGeneratedKeys="true" keyProperty="id" parameterType="com.duobi.wuye.entity.ProblemEntity">
+        INSERT INTO t_problem(
+          openid,
+          normal_user_id,
+          problem_type_id,
+          problem_description,
+          appointment_time
+        )
+        VALUES (
+          #{openid},
+          #{normalUser.id},
+          #{problemType.id},
+          #{problemDescription},
+          #{appointmentTime}
+        )
+    </insert>
+
+    <insert id="insertProblemRelatedPictureList" parameterType="java.util.List">
+        INSERT INTO t_problem_picture(
+        problem_id,
+        url
+        ) VALUES
+        <foreach collection="list" item="problemRelatePicture" index="index" separator=",">
+            (
+              #{problemRelatePicture.problemId},
+              #{problemRelatePicture.url}
+            )
+        </foreach>
+    </insert>
+
+    <select id="getProblemTypeByShortName" resultType="com.duobi.wuye.entity.ProblemTypeEntity">
+        select * from t_problem_type where short_name = #{shortName} and del_flag = false
+    </select>
+
+    <select id="getNormalUserByOpenid" resultType="com.duobi.wuye.entity.NormalUserEntity">
+        select *
+        from t_normal_user
+        where openid = #{openid} and del_flag =false
+    </select>
+
+</mapper>

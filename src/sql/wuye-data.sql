@@ -32,3 +32,10 @@ insert into t_normal_user_address_entity(type, parent_id, name, code, short_name
 insert into t_normal_user_address_entity(type, parent_id, name, code, short_name, create_by) VALUE ('08',8,'103室','103','103室',1);
 
 # insert into t_normal_user(openid, nick_name, sex, nation, province, city, country, head_img_url, unionid, create_by) VALUES ('oLb0h1kMIeuxBV8DnVPUM8XVPNck','石伊波','1','中国','内蒙古','鄂尔多斯',null,'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTI1Wldr2FDEysPH26zNPTicMibuwtQfx1giamy6scKdOWlcZpiaS0LfuSJS9McxTxp9bVl2CBaibHUrC9w/132',null,1)
+
+
+insert into t_problem_type(name, short_name, description) values ('报修','baoxiu','');
+insert into t_problem_type(name, short_name, description) values ('投诉','taosu','');
+
+
+

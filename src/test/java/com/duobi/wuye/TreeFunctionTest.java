@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @RunWith(SpringRunner.class)
@@ -69,6 +71,22 @@ public class TreeFunctionTest {
 
     }
 
+    @Test
+    public void urlencode(){
+        try {
+            System.out.println(java.net.URLEncoder.encode("https://duobifuwu-1252535629.cos.ap-beijing.myqcloud.com/wuye/思考人生.jpg8081861990446830822-temp","utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void uuid(){
+        for(int i=0;i<10;i++){
+            String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+            System.out.println(uuid);
+        }
+    }
 
 
 }

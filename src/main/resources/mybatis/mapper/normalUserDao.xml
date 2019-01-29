@@ -70,6 +70,15 @@
         WHERE a.normal_user_id = #{id} and a.normal_users_default_address = true and a.del_flag = false
     </select>
 
+    <!-- 根据地址的Id获取用户选中id的地址 -->
+    <select id="getUsersAddressByNormalUserAddressId" resultType="com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity">
+        SELECT
+        <include refid="normalUserAddressColumn" />
+        FROM t_normal_user_address a
+        <include refid="addressJoins" />
+        WHERE a.id = #{id} and a.del_flag = false
+    </select>
+
     <!-- 根据普通用户的openid获取用户的默认地址 -->
     <select id="getUsersDefaultAddressByOpenid" resultType="com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity">
         SELECT

@@ -307,7 +307,12 @@ public class NormalUserService {
         normalUserDao.updateUsersDefaultAddressFlagByUserId(normalUserId);
     }
 
-
+    /**
+     * 根据客户的id，获取客户的房屋列表
+     * @param pager
+     * @param normalUserId
+     * @return
+     */
     public Pager<NormalUserAddressDTO> getUsersAddressListByNormalUserId(Pager pager,Long normalUserId){
         PageHelper.startPage(pager.getPageNo(),pager.getPageSize(),pager.getOrderBy());
         List<NormalUserAddressEntity> list = normalUserDao.getUsersAddressListByNormalUserId(normalUserId);
@@ -327,4 +332,18 @@ public class NormalUserService {
 
         return pagerAddress;
     }
+
+    /**
+     * 根据客户房屋的id，获取该id房屋的详细信息
+     * @param normalUserAddressId
+     * @return
+     */
+    public NormalUserAddressDTO getUsersAddressByNormalUserAddressId(Long normalUserAddressId){
+        NormalUserAddressEntity  n = normalUserDao.getUsersAddressByNormalUserAddressId(normalUserAddressId);
+        NormalUserAddressDTO normalUserAddressDTO = new NormalUserAddressDTO();
+        return normalUserAddressDTO.convert(n);
+    }
+
+
+
 }
