@@ -218,4 +218,24 @@
         )
     </insert>
 
+    <update id="deleteNormalUserAddressById">
+        UPDATE t_normal_user_address SET del_flag = true WHERE id = #{id} AND del_flag = false
+    </update>
+
+    <select id="getUserIdByNormalUserAddressId" resultType="java.lang.Long">
+        SELECT normal_user_id FROM t_normal_user_address WHERE id = #{id} AND del_flag = false
+    </select>
+
+    <update id="updateUsersDefaultAddressTrueByUserId">
+        update t_normal_user_address
+        set normal_users_default_address = true
+        where normal_user_id = #{normalUserId} and del_flag = false
+    </update>
+
+    <select id="getAddressCountByUserId" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM t_normal_user_address
+        WHERE normal_user_id = #{normalUserId} AND del_flag = false
+    </select>
+
 </mapper>

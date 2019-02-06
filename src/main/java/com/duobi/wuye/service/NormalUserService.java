@@ -12,6 +12,7 @@ import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -336,7 +337,7 @@ public class NormalUserService {
     /**
      * 根据客户房屋的id，获取该id房屋的详细信息
      * @param normalUserAddressId
-     * @return
+     * @return 适合前端传输的信息
      */
     public NormalUserAddressDTO getUsersAddressByNormalUserAddressId(Long normalUserAddressId){
         NormalUserAddressEntity  n = normalUserDao.getUsersAddressByNormalUserAddressId(normalUserAddressId);
@@ -344,6 +345,81 @@ public class NormalUserService {
         return normalUserAddressDTO.convert(n);
     }
 
+    /**
+     * 根据客户房屋的id，获取该id房屋的详细信息
+     * @param normalUserAddressId
+     * @return 包含id的全量信息
+     */
+    public NormalUserAddressEntity getUsersAddressByNormalUserAddressId2(Long normalUserAddressId){
+        NormalUserAddressEntity  n = normalUserDao.getUsersAddressByNormalUserAddressId(normalUserAddressId);
+        return n;
+    }
 
+    /**
+     * 修改我的房屋页面，根据用户当前的地址的详细信息，获取各地址entity的id，用来设置前端页面的地址项的默认值
+     * @param n 包含有用户地址信息的详细信息
+     * @return
+     */
+    public Map<String,List<String>> getAddressIdsForDefaultInfo(NormalUserAddressEntity n){
+        Map<String, List<String>> defaultAddressInfo = new HashMap<>();
+        List<String> defaultProvinceAndCityIds = new ArrayList<>();
+        defaultProvinceAndCityIds.add(String.valueOf(n.getProvinceEntity().getId()));
+        defaultProvinceAndCityIds.add(String.valueOf(n.getCityEntity().getId()));
+        defaultAddressInfo.put("defaultProvinceAndCityIds",defaultProvinceAndCityIds);
+        List<String> countryAndTownIds = new ArrayList<>();
+        countryAndTownIds.add(String.valueOf(n.getCountryOrDistrictEntity().getId()));
+        countryAndTownIds.add(String.valueOf(n.getTownEntity().getId()));
+        defaultAddressInfo.put("defaultCountryAndTowns",countryAndTownIds);
+        List<String> community = new ArrayList<>();
+        community.add(String.valueOf(n.getCommunityEntity().getId()));
+        defaultAddressInfo.put("defaultCommunity",community);
+        List<String> buildingAndUnitAndRoom = new ArrayList<>();
+        buildingAndUnitAndRoom.add(String.valueOf(n.getBuildingEntity().getId()));
+        buildingAndUnitAndRoom.add(String.valueOf(n.getUnitEntity().getId()));
+        buildingAndUnitAndRoom.add(String.valueOf(n.getRoomEntity().getId()));
+        defaultAddressInfo.put("defaultBuildingAndUnitAndRoom",buildingAndUnitAndRoom);
+
+        return defaultAddressInfo;
+    }
+
+    /**
+     * 删除用户的房屋（set del_flag=false）
+     * @param normalUserAddressId
+     */
+    @Transactional
+    public void deleteNormalUserAddressById(Long normalUserAddressId,String openid){
+
+        NormalUserEntity normalUser = getNormalUserInfoByOpenid(openid);
+        Long normalUserId = getUserIdByNormalUserAddressId(normalUserAddressId);
+
+        if (normalUser != null && normalUser.getId().equals(normalUserId)) normalUserDao.deleteNormalUserAddressById(normalUserAddressId);
+        if (1==getAddressCountByUserId(normalUserId)) updateUsersDefaultAddressTrueByUserId(normalUserId);
+    }
+
+    /**
+     * 根据房屋的id获取到用户的id，用来判断该房屋是否是该用户的
+     * @param normalUserAddressId 房屋的id
+     * @return
+     */
+    public Long getUserIdByNormalUserAddressId(Long normalUserAddressId){
+        return normalUserDao.getUserIdByNormalUserAddressId(normalUserAddressId);
+    }
+
+    /**
+     * 将房屋的默认地址设置为true，用于当用户删除的房屋只剩余1个的时候，将最后一个房屋设置为默认房屋
+     * @param normalUserId 用户id
+     */
+    public void updateUsersDefaultAddressTrueByUserId(Long normalUserId){
+        normalUserDao.updateUsersDefaultAddressTrueByUserId(normalUserId);
+    }
+
+    /**
+     * 获取客户拥有的房屋数
+     * @param normalUserId 客户的id
+     * @return
+     */
+    public int getAddressCountByUserId(Long normalUserId){
+        return normalUserDao.getAddressCountByUserId(normalUserId);
+    }
 
 }

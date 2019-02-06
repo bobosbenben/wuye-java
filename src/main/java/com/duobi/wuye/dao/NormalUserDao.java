@@ -40,5 +40,13 @@ public interface NormalUserDao {
 
     public NormalUserAddressEntity getUsersAddressByNormalUserAddressId(Long normalUserAddressId);
 
+    public void deleteNormalUserAddressById(Long normalUserAddressId);
+
+    public Long getUserIdByNormalUserAddressId(Long normalUserAddressId);
+
+    public void updateUsersDefaultAddressTrueByUserId(Long normalUserId);
+
+    public int getAddressCountByUserId(Long normalUserId);
+
 
 }
