@@ -3,7 +3,6 @@ package com.duobi.wuye.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.duobi.wuye.dto.NormalUserAddressDTO;
 import com.duobi.wuye.dto.NormalUserAddressFromClientDTO;
-import com.duobi.wuye.dto.NormalUserDTO;
 import com.duobi.wuye.entity.NormalUserEntity;
 import com.duobi.wuye.entity.addressEntity.NormalUserAddressEntity;
 import com.duobi.wuye.entity.utilEntity.LabelValueTreeEntity;
@@ -82,31 +81,31 @@ public class MineCommunityController {
     @RequestMapping(value = "/getdistrict")
     public @ResponseBody
     Object getDistrictByOpenid(){
-        LabelValueTreeEntity labelValueTreeEntity = normalUserService.getCitiesAndItsProvinces();
+        LabelValueTreeEntity labelValueTreeEntity = normalUserService.getCountriesAndCitiesAndItsProvinces();
 
         if (null == labelValueTreeEntity) return new ArrayList<>();
         return labelValueTreeEntity.getChildren();
     }
 
-    @CrossOrigin( maxAge = 3600)
-    @RequestMapping(value = "/getcountry")
-    public @ResponseBody
-    Object getCountryAndTownByCityId(@RequestBody JSONObject jsonObject){
-
-        Long cityId = Long.parseLong(jsonObject.getString("cityId"));
-        LabelValueTreeEntity labelValueTreeEntity = normalUserService.getCountriesAndItsTownsByCityId(cityId);
-
-        if (null == labelValueTreeEntity) return new ArrayList<>();
-        return labelValueTreeEntity.getChildren();
-    }
+//    @CrossOrigin( maxAge = 3600)
+//    @RequestMapping(value = "/getcountry")
+//    public @ResponseBody
+//    Object getCountryAndTownByCityId(@RequestBody JSONObject jsonObject){
+//
+//        Long cityId = Long.parseLong(jsonObject.getString("cityId"));
+//        LabelValueTreeEntity labelValueTreeEntity = normalUserService.getCountriesAndItsTownsByCityId(cityId);
+//
+//        if (null == labelValueTreeEntity) return new ArrayList<>();
+//        return labelValueTreeEntity.getChildren();
+//    }
 
     @CrossOrigin( maxAge = 3600)
     @RequestMapping(value = "/getcommunity")
     public @ResponseBody
-    Object getCommunityByTownId(@RequestBody JSONObject jsonObject){
+    Object getCommunityByCountryId(@RequestBody JSONObject jsonObject){
 
-        Long townId = Long.parseLong(jsonObject.getString("townId"));
-        LabelValueTreeEntity labelValueTreeEntity = normalUserService.getCommuntiesByTownId(townId);
+        Long countryId = Long.parseLong(jsonObject.getString("countryId"));
+        LabelValueTreeEntity labelValueTreeEntity = normalUserService.getCommuntiesByCountryId(countryId);
 
         if (null == labelValueTreeEntity) return new ArrayList<>();
         return labelValueTreeEntity.getChildren();

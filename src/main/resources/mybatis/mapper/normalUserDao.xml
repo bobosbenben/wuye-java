@@ -116,6 +116,12 @@
         WHERE a.del_flag = FALSE AND type IN (#{ADDRESS_ENTITY_TYPE_PROVINCE},#{ADDRESS_ENTITY_TYPE_CITY})
     </select>
 
+    <select id="getCountriesAndCitysAndItsProvinces" parameterType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity" resultType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity">
+        SELECT *
+        FROM t_normal_user_address_entity a
+        WHERE a.del_flag = FALSE AND type IN (#{ADDRESS_ENTITY_TYPE_PROVINCE},#{ADDRESS_ENTITY_TYPE_CITY},#{ADDRESS_ENTITY_TYPE_COUNTRY})
+    </select>
+
     <select id="getCountriesByCityId"  parameterType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity" resultType="com.duobi.wuye.entity.addressEntity.BaseAddressEntity">
         select *
         from t_normal_user_address_entity a

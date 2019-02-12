@@ -62,6 +62,20 @@ public class NormalUserService {
     }
 
     /**
+     * 获取全部省和城市和区、县
+     * @return
+     */
+    public LabelValueTreeEntity getCountriesAndCitiesAndItsProvinces(){
+        List<BaseAddressEntity> citiesAndProvinces = normalUserDao.getCountriesAndCitysAndItsProvinces(new BaseAddressEntity());
+
+        //加入根元素（nation）
+        BaseAddressEntity cityEntity = getAddressEntityById(1L);
+        citiesAndProvinces.add(cityEntity);
+
+        return makeTree(citiesAndProvinces,1L);
+    }
+
+    /**
      * 根据县或区的id获取它包含的全部镇
      * @param cityId
      * @return
@@ -110,6 +124,35 @@ public class NormalUserService {
 
 
         return makeTree(communities,townId);
+    }
+
+    /**
+     * 根据区或县的id获取下辖的全部镇和镇的全部小区
+     * @param countryId
+     * @return
+     */
+    public LabelValueTreeEntity getCommuntiesByCountryId(Long countryId){
+        BaseAddressEntity baseAddressEntity = new BaseAddressEntity();
+        baseAddressEntity.setParentId(countryId);
+        List<BaseAddressEntity> townsAndItsCommunities = normalUserDao.getTownsByCountryId(baseAddressEntity);
+
+        List<Long> townIds = new ArrayList<>();
+        List<BaseAddressEntity> communities = new ArrayList<>();
+        for (BaseAddressEntity town: townsAndItsCommunities){
+            if (!townIds.contains(town.getId())){
+                townIds.add(town.getId());
+                BaseAddressEntity baseAddressEntityForCommunity = new BaseAddressEntity();
+                baseAddressEntityForCommunity.setParentId(town.getId());
+                List<BaseAddressEntity> tempCommunities = normalUserDao.getCommunitiesByTownId(baseAddressEntityForCommunity);
+                communities.addAll(tempCommunities);
+            }
+        }
+
+        townsAndItsCommunities.addAll(communities);
+        BaseAddressEntity countryEntity = getAddressEntityById(countryId);
+        townsAndItsCommunities.add(countryEntity);
+
+        return makeTree(townsAndItsCommunities,countryId);
     }
 
     /**

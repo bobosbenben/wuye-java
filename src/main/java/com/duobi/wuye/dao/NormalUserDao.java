@@ -14,6 +14,8 @@ public interface NormalUserDao {
 
     public List<BaseAddressEntity> getCitysAndItsProvinces(BaseAddressEntity baseAddressEntity);
 
+    public List<BaseAddressEntity> getCountriesAndCitysAndItsProvinces(BaseAddressEntity baseAddressEntity);
+
     public List<BaseAddressEntity> getCountriesByCityId(BaseAddressEntity baseAddressEntity);
 
     public List<BaseAddressEntity> getTownsByCountryId(BaseAddressEntity baseAddressEntity);
